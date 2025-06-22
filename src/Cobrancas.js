@@ -93,7 +93,7 @@ export default function Cobrancas({ onVoltar }) {
           status_fluxo: "Em atraso"
         })
       });
-      setCobrancas(cobrancas => cobrancas.filter e => e.id !== id));
+setCobrancas(cobrancas => cobrancas.filter(e => e.id !== id));
     } catch (err) {
       alert('Erro ao marcar como não pagou.');
     }
