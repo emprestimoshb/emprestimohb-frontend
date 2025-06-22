@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Badge, Box, Typography } from "@mui/material";
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Badge } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -12,23 +12,25 @@ const menuItems = [
   { label: "Lista Negra", value: "inadimplentes", icon: <BlockIcon /> },
 ];
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 export default function Sidebar({ selected, onSelect, onPainel }) {
   const [qtdCobrancas, setQtdCobrancas] = useState(0);
   const [qtdAtrasados, setQtdAtrasados] = useState(0);
   const [qtdInadimplentes, setQtdInadimplentes] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/emprestimos/cobrancas-hoje")
+    fetch(`${API_URL}/api/emprestimos/cobrancas-hoje`)
       .then(res => res.json())
       .then(data => setQtdCobrancas(Array.isArray(data) ? data.length : 0))
       .catch(() => setQtdCobrancas(0));
 
-    fetch("http://localhost:5000/api/emprestimos/atrasados")
+    fetch(`${API_URL}/api/emprestimos/atrasados`)
       .then(res => res.json())
       .then(data => setQtdAtrasados(Array.isArray(data) ? data.length : 0))
       .catch(() => setQtdAtrasados(0));
 
-    fetch("http://localhost:5000/api/emprestimos/inadimplentes")
+    fetch(`${API_URL}/api/emprestimos/inadimplentes`)
       .then(res => res.json())
       .then(data => setQtdInadimplentes(Array.isArray(data) ? data.length : 0))
       .catch(() => setQtdInadimplentes(0));
@@ -44,7 +46,6 @@ export default function Sidebar({ selected, onSelect, onPainel }) {
       }}
     >
       <Toolbar />
-     
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.value} disablePadding>
