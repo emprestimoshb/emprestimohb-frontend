@@ -295,49 +295,43 @@ function App() {
 
   console.log(form);
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Navbar
-        onSelect={setTela}
-        adminLogado={adminLogado}
-        onLogout={handleLogout}
-      />
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        {/* ...conteúdo da navbar... */}
-      </AppBar>
-      <Box sx={{ background: "#f5f6fa", minHeight: "100vh", py: 4 }}>
-        <Container maxWidth="md">
-          {tela === 'formulario' && (
-            <>
-              <Typography
-                variant="h4"
-                sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}
-              >
-                Formulário de Cadastro
-              </Typography>
-              {cadastroEnviado ? (
-                <Card sx={{ background: '#e3f6e8', border: '1px solid #1976d2', color: '#1976d2', borderRadius: 2, p: 3, m: '40px auto', textAlign: 'center', fontWeight: 'bold', maxWidth: 500, fontSize: 18 }}>
-                  <CardContent>
-                    {mensagem}
-                  </CardContent>
-                </Card>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  {loading && (
-                    <Typography sx={{ textAlign: 'center', color: '#1976d2', fontWeight: 'bold', mb: 2 }}>
-                      Enviando cadastro, aguarde...
-                    </Typography>
-                  )}
-                  {mensagem && (
-                    <Card sx={{ background: '#e3f6e8', border: '1px solid #1976d2', color: '#1976d2', borderRadius: 2, p: 2, mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
-                      <CardContent>
-                        {mensagem}
-                      </CardContent>
-                    </Card>
-                  )}
+ return (
+  <ThemeProvider theme={theme}>
+    <Navbar
+      onSelect={setTela}
+      adminLogado={adminLogado}
+      onLogout={handleLogout}
+    />
+    <Box sx={{ background: "#f5f6fa", minHeight: "100vh", py: 4, mt: { xs: '56px', sm: '64px' } }}>
+      <Container maxWidth="md">
+        {tela === 'formulario' && (
+          <>
+            <Typography
+              variant="h4"
+              sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}
+            >
+              Formulário de Cadastro
+            </Typography>
+            {cadastroEnviado ? (
+              <Card sx={{ background: '#e3f6e8', border: '1px solid #1976d2', color: '#1976d2', borderRadius: 2, p: 3, m: '40px auto', textAlign: 'center', fontWeight: 'bold', maxWidth: 500, fontSize: 18 }}>
+                <CardContent>
+                  {mensagem}
+                </CardContent>
+              </Card>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                {loading && (
+                  <Typography sx={{ textAlign: 'center', color: '#1976d2', fontWeight: 'bold', mb: 2 }}>
+                    Enviando cadastro, aguarde...
+                  </Typography>
+                )}
+                {mensagem && (
+                  <Card sx={{ background: '#e3f6e8', border: '1px solid #1976d2', color: '#1976d2', borderRadius: 2, p: 2, mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
+                    <CardContent>
+                      {mensagem}
+                    </CardContent>
+                  </Card>
+                )}
 
                   {/* DADOS PESSOAIS */}
                   <Card sx={{ mb: 4, maxWidth: 500, mx: "auto" }}>
