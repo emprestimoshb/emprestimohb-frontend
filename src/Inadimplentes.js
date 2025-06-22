@@ -8,6 +8,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 export default function Inadimplentes({ onVoltar }) {
   const [inadimplentes, setInadimplentes] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -20,7 +22,7 @@ export default function Inadimplentes({ onVoltar }) {
   const [itemDesconto, setItemDesconto] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/emprestimos/inadimplentes")
+    fetch(`${API_URL}/api/emprestimos/inadimplentes`)
       .then(res => res.json())
       .then(data => {
         setInadimplentes(data);
@@ -31,7 +33,7 @@ export default function Inadimplentes({ onVoltar }) {
   // Marcar como quitado
   const marcarComoQuitado = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/emprestimos/${id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -52,7 +54,7 @@ export default function Inadimplentes({ onVoltar }) {
       const novaDataPagamento = new Date();
       novaDataPagamento.setDate(novaDataPagamento.getDate() + 30);
 
-      await fetch(`http://localhost:5000/api/emprestimos/${item.id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${item.id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -94,7 +96,7 @@ export default function Inadimplentes({ onVoltar }) {
   const aplicarDesconto = async () => {
     if (!itemDesconto || descontoValor === '') return;
     try {
-      await fetch(`http://localhost:5000/api/emprestimos/${itemDesconto.id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${itemDesconto.id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -103,7 +105,7 @@ export default function Inadimplentes({ onVoltar }) {
         })
       });
       // Agora, busque novamente do backend para garantir dados atualizados:
-      const res = await fetch("http://localhost:5000/api/emprestimos/inadimplentes");
+      const res = await fetch(`${API_URL}/api/emprestimos/inadimplentes`);
       const data = await res.json();
       setInadimplentes(data);
       setOpenDesconto(false);
