@@ -74,6 +74,8 @@ const theme = createTheme({
   }
 });
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function App() {
   const [form, setForm] = useState({
     nome: '',
@@ -238,7 +240,7 @@ function App() {
     if (documentoFotoVerso) data.append('documentoFotoVerso', documentoFotoVerso);
     if (fotoSegurandoDocumento) data.append('fotoSegurandoDocumento', fotoSegurandoDocumento);
 
-    const response = await fetch('http://localhost:5000/api/cadastro', {
+    const response = await fetch(`${API_URL}/api/cadastro`, {
       method: 'POST',
       body: data,
     });
