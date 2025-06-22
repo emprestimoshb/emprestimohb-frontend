@@ -1304,19 +1304,21 @@ await buscarTodos();
                       </Grid>
                       {/* Documento com Foto - Frente */}
                       <Grid item xs={12} sm={3}>
-                        <b style={{ fontSize: 13 }}>Documento com Foto - Frente</b><br />
-                        {cadastro.documento_foto_frente && (
-                          <>
-                                                            src={`${API_URL}/uploads/${cadastro.documento_foto_frente}`}
-                                alt="Documento com Foto - Frente"
-                                style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
-                              />
-                            ) : (
-                              <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
-                            )}
-                            <div>
-                              <a href={`${API_URL}/uploads/${cadastro.documento_foto_frente}`} target="_blank" rel="noopener noreferrer">
-                                <Button size="small" variant="outlined">Baixar</Button>
+  <b style={{ fontSize: 13 }}>Documento com Foto - Frente</b><br />
+  {cadastro.documento_foto_frente && (
+    <>
+      {cadastro.documento_foto_frente.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+        <img
+          src={`${API_URL}/uploads/${cadastro.documento_foto_frente}`}
+          alt="Documento com Foto - Frente"
+          style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
+        />
+      ) : (
+        <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
+      )}
+      <div>
+        <a href={`${API_URL}/uploads/${cadastro.documento_foto_frente}`} target="_blank" rel="noopener noreferrer">
+          <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
                           </>
