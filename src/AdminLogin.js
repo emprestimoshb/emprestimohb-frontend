@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, Paper, Typography, TextField, Button, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function AdminLogin({ onLogin }) {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
@@ -11,7 +13,7 @@ function AdminLogin({ onLogin }) {
     e.preventDefault();
     setErro('');
     try {
-      const response = await fetch('https://emprestimohb-backend.onrender.com/api/admin/login', {
+      const response = await fetch(`${API_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuario, senha })
