@@ -9,6 +9,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 export default function Cobrancas({ onVoltar }) {
   const [cobrancas, setCobrancas] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -18,7 +20,7 @@ export default function Cobrancas({ onVoltar }) {
   const [acaoId, setAcaoId] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/emprestimos/cobrancas-hoje")
+    fetch(`${API_URL}/api/emprestimos/cobrancas-hoje`)
       .then(res => res.json())
       .then(data => {
         setCobrancas(data);
@@ -28,7 +30,7 @@ export default function Cobrancas({ onVoltar }) {
 
   // Função para buscar contatos do cliente
   const handleContatos = async (cpf) => {
-    const res = await fetch(`http://localhost:5000/api/cadastros/${cpf}`);
+    const res = await fetch(`${API_URL}/api/cadastros/${cpf}`);
     const data = await res.json();
     setContatos(data.telefones || []);
     setContatoOpen(true);
@@ -43,7 +45,7 @@ export default function Cobrancas({ onVoltar }) {
   // Marcar como quitado
   const marcarComoQuitado = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/emprestimos/${id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,7 +66,7 @@ export default function Cobrancas({ onVoltar }) {
       const novaDataPagamento = new Date();
       novaDataPagamento.setDate(novaDataPagamento.getDate() + 30);
 
-      await fetch(`http://localhost:5000/api/emprestimos/${item.id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${item.id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -84,14 +86,14 @@ export default function Cobrancas({ onVoltar }) {
   // Marcar como não pagou
   const marcarNaoPagou = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/emprestimos/${id}/fluxo`, {
+      await fetch(`${API_URL}/api/emprestimos/${id}/fluxo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status_fluxo: "Em atraso"
         })
       });
-      setCobrancas(cobrancas => cobrancas.filter(e => e.id !== id));
+      setCobrancas(cobrancas => cobrancas.filter e => e.id !== id));
     } catch (err) {
       alert('Erro ao marcar como não pagou.');
     }
