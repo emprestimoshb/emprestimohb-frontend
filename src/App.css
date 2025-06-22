@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+/* Removido o CSS antigo de form, fieldset, legend e inputs para evitar conflito com Material UI */
+
+/* Você pode adicionar estilos customizados para harmonizar com o Material UI aqui, se desejar */
