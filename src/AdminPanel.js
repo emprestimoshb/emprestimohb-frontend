@@ -33,6 +33,8 @@ import Cobrancas from "./Cobrancas";
 import Atrasados from "./Atrasados"; // importe o novo componente
 import Inadimplentes from "./Inadimplentes";
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function formatarCpf(cpf) {
   if (!cpf) return '';
   const cpfLimpo = cpf.replace(/[^\d]/g, '');
@@ -157,13 +159,13 @@ function AdminPanel(props) {
 
   // Estatísticas
   const buscarEstatisticas = async () => {
-    const res = await fetch('http://localhost:5000/api/emprestimos/estatisticas');
+const res = await fetch(`${API_URL}/api/emprestimos/estatisticas`);
     if (!res.ok) return;
     const data = await res.json();
     setEstatisticas(data);
   };
   const buscarEstatClientes = async () => {
-    const res = await fetch('http://localhost:5000/api/cadastros/estatisticas');
+    const res = await fetch(`${API_URL}/api/cadastros/estatisticas`);
     if (!res.ok) return;
     const data = await res.json();
     setEstatClientes({
@@ -172,7 +174,7 @@ function AdminPanel(props) {
     });
   };
   const buscarEstatFluxo = async () => {
-    const res = await fetch('http://localhost:5000/api/emprestimos/fluxo-estatisticas');
+    const res = await fetch(`${API_URL}/api/emprestimos/fluxo-estatisticas`);
     if (!res.ok) {
       setEstatFluxo({ porFluxo: [] });
       return;
@@ -199,8 +201,8 @@ function AdminPanel(props) {
   setMostrarLista(true);
   try {
     const [respCad, respEmp] = await Promise.all([
-      fetch('http://localhost:5000/api/cadastros'),
-      fetch('http://localhost:5000/api/emprestimos')
+      fetch(`${API_URL}/api/cadastros`),
+      fetch(`${API_URL}/api/emprestimos`)
     ]);
     if (respCad.ok) {
       const data = await respCad.json();
@@ -228,7 +230,7 @@ function AdminPanel(props) {
 
     const cpfLimpo = cpfBusca.replace(/[^\d]/g, '');
 
-    const response = await fetch(`http://localhost:5000/api/cadastro/${cpfLimpo}`);
+    const response = await fetch(`${API_URL}/api/cadastro/${cpfLimpo}`);
     if (response.ok) {
       const data = await response.json();
       setCadastro(data);
@@ -243,37 +245,37 @@ function AdminPanel(props) {
     setMensagem('');
     setCadastro(null);
     setMostrarLista(false);
-    const response = await fetch(`http://localhost:5000/api/cadastro/${cpf}`);
+    const response = await fetch(`${API_URL}/api/cadastro/${cpf}`);
     if (response.ok) {
       const data = await response.json();
       setCadastro(data);
 
       // Buscar histórico de empréstimos
-const resEmp = await fetch(`http://localhost:5000/api/emprestimos/${cpf}`);
-if (resEmp.ok) {
-  const listaEmp = await resEmp.json();
-  setEmprestimosFicha(listaEmp); // <-- ESSENCIAL!
+      const resEmp = await fetch(`${API_URL}/api/emprestimos/${cpf}`);
+      if (resEmp.ok) {
+        const listaEmp = await resEmp.json();
+        setEmprestimosFicha(listaEmp); // <-- ESSENCIAL!
 
-  // Pega o último empréstimo (mais recente)
-if (listaEmp.length > 0) {
-  const emprestimoAtual = listaEmp[0];
-  setEmprestimoAtivo(emprestimoAtual);
+         // Pega o último empréstimo (mais recente)
+        if (listaEmp.length > 0) {
+          const emprestimoAtual = listaEmp[0];
+          setEmprestimoAtivo(emprestimoAtual);
 
-  // Buscar valor devido do empréstimo ativo
-  const resVal = await fetch(`http://localhost:5000/api/emprestimos/${emprestimoAtual.id}/valor-devido`);
-  if (resVal.ok) {
-    setValorDevido(await resVal.json());
-  } else {
-    setValorDevido(null);
-  }
-} else {
-    setEmprestimoAtivo(null);
-    setValorDevido(null);
-  }
-} else {
-  setEmprestimoAtivo(null);
-  setValorDevido(null);
-}
+            // Buscar valor devido do empréstimo ativo
+          const resVal = await fetch(`${API_URL}/api/emprestimos/${emprestimoAtual.id}/valor-devido`);
+          if (resVal.ok) {
+            setValorDevido(await resVal.json());
+          } else {
+            setValorDevido(null);
+          }
+        } else {
+          setEmprestimoAtivo(null);
+          setValorDevido(null);
+        }
+      } else {
+        setEmprestimoAtivo(null);
+        setValorDevido(null);
+      }
     } else {
       setMensagem('Cadastro não encontrado.');
     }
@@ -283,7 +285,7 @@ if (listaEmp.length > 0) {
   // Atualizar status do cadastro
   async function atualizarStatus(novoStatus) {
     if (!cadastro) return;
-    await fetch(`http://localhost:5000/api/cadastro/${cadastro.cpf}/status`, {
+    await fetch(`${API_URL}/api/cadastro/${cadastro.cpf}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: novoStatus })
@@ -294,7 +296,7 @@ if (listaEmp.length > 0) {
   // Atualizar fluxo do empréstimo ativo
   async function atualizarFluxoEmprestimo(novosDados) {
     if (!emprestimoAtivo) return;
-    await fetch(`http://localhost:5000/api/emprestimos/${emprestimoAtivo.id}/fluxo`, {
+    await fetch(`${API_URL}/api/emprestimos/${emprestimoAtivo.id}/fluxo`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(novosDados)
@@ -853,7 +855,7 @@ if (listaEmp.length > 0) {
           onClick={async () => {
             if (!dataAprovacao) return;
             // Atualiza o status do cadastro
-await fetch(`http://localhost:5000/api/cadastro/${cadastro.cpf}/status`, {
+await fetch(`${API_URL}/api/cadastro/${cadastro.cpf}/status`, {
   method: 'PUT',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ status: 'Aprovado', data_emprestimo: dataAprovacao })
@@ -861,7 +863,7 @@ await fetch(`http://localhost:5000/api/cadastro/${cadastro.cpf}/status`, {
 
 if (emprestimoInicial) {
   const dataPagamento = addDaysUTC(dataAprovacao, 30);
-  await fetch(`http://localhost:5000/api/emprestimos/${emprestimoInicial.id}/fluxo`, {
+  await fetch(`${API_URL}/api/emprestimos/${emprestimoInicial.id}/fluxo`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -1106,7 +1108,7 @@ await buscarTodos();
                                 dataProxPagamento.setDate(dataProxPagamento.getDate() + 30);
                                 const data_pagamento = dataProxPagamento.toISOString().slice(0, 10);
 
-                                const resp = await fetch(`http://localhost:5000/api/emprestimos`, {
+                                const resp = await fetch(`${API_URL}/api/emprestimos`, {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({
@@ -1241,7 +1243,7 @@ await buscarTodos();
                           <>
                             {cadastro.comprovante_renda.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                               <img
-                                src={`http://localhost:5000/uploads/${cadastro.comprovante_renda}`}
+                                src={`${API_URL}/uploads/${cadastro.comprovante_renda}`}
                                 alt="Comprovante de Renda"
                                 style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
                               />
@@ -1249,7 +1251,7 @@ await buscarTodos();
                               <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
                             )}
                             <div>
-                              <a href={`http://localhost:5000/uploads/${cadastro.comprovante_renda}`} target="_blank" rel="noopener noreferrer">
+                              <a href={`${API_URL}/uploads/${cadastro.comprovante_renda}`} target="_blank" rel="noopener noreferrer">
                                 <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
@@ -1263,7 +1265,7 @@ await buscarTodos();
                           <>
                             {cadastro.comprovante_residencia.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                               <img
-                                src={`http://localhost:5000/uploads/${cadastro.comprovante_residencia}`}
+                                src={`${API_URL}/uploads/${cadastro.comprovante_residencia}`}
                                 alt="Comprovante de Residência"
                                 style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
                               />
@@ -1271,7 +1273,7 @@ await buscarTodos();
                               <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
                             )}
                             <div>
-                              <a href={`http://localhost:5000/uploads/${cadastro.comprovante_residencia}`} target="_blank" rel="noopener noreferrer">
+                              <a href={`${API_URL}/uploads/${cadastro.comprovante_residencia}`} target="_blank" rel="noopener noreferrer">
                                 <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
@@ -1285,7 +1287,7 @@ await buscarTodos();
                           <>
                             {cadastro.foto_segurando_documento.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                               <img
-                                src={`http://localhost:5000/uploads/${cadastro.foto_segurando_documento}`}
+                                src={`${API_URL}/uploads/${cadastro.foto_segurando_documento}`}
                                 alt="Foto Segurando Documento"
                                 style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
                               />
@@ -1293,7 +1295,7 @@ await buscarTodos();
                               <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
                             )}
                             <div>
-                              <a href={`http://localhost:5000/uploads/${cadastro.foto_segurando_documento}`} target="_blank" rel="noopener noreferrer">
+                              <a href={`${API_URL}/uploads/${cadastro.foto_segurando_documento}`} target="_blank" rel="noopener noreferrer">
                                 <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
@@ -1305,9 +1307,7 @@ await buscarTodos();
                         <b style={{ fontSize: 13 }}>Documento com Foto - Frente</b><br />
                         {cadastro.documento_foto_frente && (
                           <>
-                            {cadastro.documento_foto_frente.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-                              <img
-                                src={`http://localhost:5000/uploads/${cadastro.documento_foto_frente}`}
+                                                            src={`${API_URL}/uploads/${cadastro.documento_foto_frente}`}
                                 alt="Documento com Foto - Frente"
                                 style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
                               />
@@ -1315,7 +1315,7 @@ await buscarTodos();
                               <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
                             )}
                             <div>
-                              <a href={`http://localhost:5000/uploads/${cadastro.documento_foto_frente}`} target="_blank" rel="noopener noreferrer">
+                              <a href={`${API_URL}/uploads/${cadastro.documento_foto_frente}`} target="_blank" rel="noopener noreferrer">
                                 <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
@@ -1329,7 +1329,7 @@ await buscarTodos();
                           <>
                             {cadastro.documento_foto_verso.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                               <img
-                                src={`http://localhost:5000/uploads/${cadastro.documento_foto_verso}`}
+                                src={`${API_URL}/uploads/${cadastro.documento_foto_verso}`}
                                 alt="Documento com Foto - Verso"
                                 style={{ width: 80, height: 80, objectFit: 'cover', marginBottom: 6, borderRadius: 4, border: '1px solid #ccc' }}
                               />
@@ -1337,7 +1337,7 @@ await buscarTodos();
                               <span style={{ marginBottom: 6, display: 'block' }}>Arquivo PDF</span>
                             )}
                             <div>
-                              <a href={`http://localhost:5000/uploads/${cadastro.documento_foto_verso}`} target="_blank" rel="noopener noreferrer">
+                              <a href={`${API_URL}/uploads/${cadastro.documento_foto_verso}`} target="_blank" rel="noopener noreferrer">
                                 <Button size="small" variant="outlined">Baixar</Button>
                               </a>
                             </div>
@@ -1356,7 +1356,7 @@ await buscarTodos();
                     onClick={async () => {
                       if (window.confirm('Tem certeza que deseja excluir esta ficha? Esta ação não poderá ser desfeita.')) {
                         if (cadastro && cadastro.cpf) {
-                          await fetch(`http://localhost:5000/api/cliente/${cadastro.cpf}`, {
+                          await fetch(`${API_URL}/api/cliente/${cadastro.cpf}`, {
                             method: 'DELETE'
                           });
                         }
