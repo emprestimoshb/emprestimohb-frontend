@@ -13,19 +13,12 @@ function Navbar({ onSelect, adminLogado, onLogout }) {
           HB Crédito Rápido
         </Typography>
         <Box>
-          <Button
-            color="inherit"
-            variant="outlined"
-            sx={{ ml: 1, bgcolor: '#fff', color: '#1976d2', fontWeight: 'bold' }}
-            onClick={() => onSelect('formulario')}
-          >
-            Formulário
-          </Button>
           {!adminLogado && (
             <Button
-              color="inherit"
-              variant="outlined"
-              sx={{ ml: 1, bgcolor: '#fff', color: '#1976d2', fontWeight: 'bold' }}
+              color="primary"
+              variant="text"
+              size="small"
+              sx={{ ml: 1, fontWeight: 'bold', px: 2, minWidth: 0 }}
               onClick={() => onSelect('admin')}
             >
               Painel Administrador
@@ -35,7 +28,8 @@ function Navbar({ onSelect, adminLogado, onLogout }) {
             <Button
               color="error"
               variant="contained"
-              sx={{ ml: 2, fontWeight: 'bold' }}
+              size="small"
+              sx={{ ml: 2, fontWeight: 'bold', px: 2, minWidth: 0 }}
               onClick={onLogout}
             >
               Sair
