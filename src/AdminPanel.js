@@ -490,6 +490,18 @@ const res = await fetch(`${API_URL}/api/emprestimos/estatisticas`);
                       </CardContent>
                     </Card>
                   </Grid>
+                      <Grid item xs={12} sm={2}>
+    <Card sx={{ minHeight: 100, background: "#d1f2fa" }}>
+      <CardContent sx={{ textAlign: 'center' }}>
+        <Typography variant="subtitle2" color="primary" gutterBottom>
+          Valor investido no mês
+        </Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          R$ {(estatisticas.valorInvestidoMes ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        </Typography>
+      </CardContent>
+    </Card>
+  </Grid>     
                   <Grid item xs={12} sm={2}>
                     <Card sx={{ minHeight: 100, background: "#e6f7fa" }}>
                       <CardContent sx={{ textAlign: 'center' }}>
