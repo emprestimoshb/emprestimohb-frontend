@@ -960,216 +960,213 @@ const res = await fetch(`${API_URL}/api/emprestimos/estatisticas`);
                 {/* Fluxo do Empréstimo e ações permanecem iguais */}
                 <Card sx={{ mb: 2, background: '#f7faff' }}>
                   <CardContent>
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      {/* Status do fluxo - MANTIDO COMO ESTÁ */}
-                      <Typography>
-                        <b>Status do Fluxo:</b>{' '}
-                        <span style={{
-                          color:
-                            emprestimoAtivo?.status_fluxo === 'Quitado' ? 'gray' :
-                            emprestimoAtivo?.status_fluxo === 'Prorrogado' ? 'blue' :
-                            emprestimoAtivo?.status_fluxo === 'Inadimplente' ? 'red' :
-                            emprestimoAtivo?.status_fluxo === 'Em atraso' ? 'orange' :
-                            'green',
-                          fontWeight: 'bold'
-                        }}>
-                          {emprestimoAtivo ? (emprestimoAtivo.status_fluxo || 'Em dia') : '-'}
-                        </span>
-                      </Typography>
-                      {emprestimoAtivo && (
-                        <Button variant="outlined" color="primary" size="small" onClick={() => setEditando(true)}>
-                          Editar
-                        </Button>
-                      )}
-                    </Box>
-                    <Box display="flex" flexDirection="column" gap={1}>
-                      <Typography>
-                        <b>Data do Empréstimo:</b>{' '}
-                        {emprestimoAtivo?.data_emprestimo
-                          ? new Date(emprestimoAtivo.data_emprestimo).toLocaleDateString('pt-BR')
-                          : '-'}
-                      </Typography>
-                      <Typography>
-                        <b>Data do Próximo Pagamento:</b>{' '}
-                        {emprestimoAtivo?.data_pagamento
-                          ? new Date(emprestimoAtivo.data_pagamento).toLocaleDateString('pt-BR')
-                          : '-'}
-                      </Typography>
-                      <Typography>
-                        <b>Data do Pagamento Real:</b>{' '}
-                        {emprestimoAtivo?.data_pagamento_real
-                          ? new Date(emprestimoAtivo.data_pagamento_real).toLocaleDateString('pt-BR')
-                          : '-'}
-                      </Typography>
-                      <Typography>
-                        <b>Pagamento somente dos juros (30%):</b> {emprestimoAtivo?.pagamento_30 ? 'Sim' : 'Não'}
-                        {emprestimoAtivo?.quantidade_pagamento_30 > 0 && (
-                          <span style={{ marginLeft: 8 }}>
-                            <b>({emprestimoAtivo.quantidade_pagamento_30}x)</b>
-                          </span>
-                        )}
-                      </Typography>
-                      <Typography>
-                        <b>Data do Último Pagamento 30%:</b>{' '}
-                        {emprestimoAtivo?.data_ultimo_pagamento_30
-                          ? new Date(emprestimoAtivo.data_ultimo_pagamento_30).toLocaleDateString('pt-BR')
-                          : '-'}
-                      </Typography>
-                      <Typography>
-                          <b>Valor Emprestado:</b> R$ {emprestimoAtivo?.valor_desejado ? Number(emprestimoAtivo.valor_desejado).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '-'}
-                      </Typography>
-                      <Typography>
-                        <b>Juros 30% pagos:</b> R$ {emprestimoAtivo?.quantidade_pagamento_30 && emprestimoAtivo?.valor_desejado
-                          ? (Number(emprestimoAtivo.valor_desejado) * 0.3 * Number(emprestimoAtivo.quantidade_pagamento_30)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-                          : '0,00'}
-                      </Typography>
-                      <Typography>
-                        <b>Dias em atraso:</b> {emprestimoAtivo?.dias_atraso ?? 0}
-                      </Typography>
-                      <Typography>
-                        <b>Juros de atraso:</b> R$ {emprestimoAtivo?.juros_atraso ? Number(emprestimoAtivo.juros_atraso).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}
-                      </Typography>
-                      <Typography sx={{ color: 'red', fontWeight: 'bold' }}>
-                        Valor Total Devido: R$ {emprestimoAtivo?.status_fluxo === 'Quitado'
-                          ? '0,00'
-                          : (
-                              emprestimoAtivo?.valor_total_devido !== null && emprestimoAtivo?.valor_total_devido !== undefined
-                                ? Number(emprestimoAtivo.valor_total_devido).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-                                : '0,00'
-                            )
-                      }
-                      </Typography>
-                      <Typography sx={{ color: 'green', fontWeight: 'bold' }}>
-                        Valor Quitado: R$ {emprestimoAtivo?.valor_quitado
-                          ? Number(emprestimoAtivo.valor_quitado).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-                          : '0,00'}
-                      </Typography>
-                    </Box>
-                    {/* Botões de ação */}
-                    {emprestimoAtivo && (
-                      <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => setMostrarDataPagamento('quitado')}
-                          disabled={!!mostrarDataPagamento}
-                        >
-                          Marcar como Quitado
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="warning"
-                          onClick={() => setMostrarDataPagamento('30')}
-                          disabled={!!mostrarDataPagamento}
-                        >
-                          Marcar Pagamento dos 30%
-                        </Button>
-                        {emprestimoAtivo.status_fluxo === 'Quitado' && (
-                          <Button
-                            variant="outlined"
-                            color="warning"
-                            onClick={desfazerQuitacao}
-                          >
-                            Desfazer Quitação
+                    {emprestimoAtivo ? (
+                      <>
+                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                          <Typography>
+                            <b>Status do Fluxo:</b>{' '}
+                            <span style={{
+                              color:
+                                emprestimoAtivo.status_fluxo === 'Quitado' ? 'gray' :
+                                emprestimoAtivo.status_fluxo === 'Prorrogado' ? 'blue' :
+                                emprestimoAtivo.status_fluxo === 'Inadimplente' ? 'red' :
+                                emprestimoAtivo.status_fluxo === 'Em atraso' ? 'orange' :
+                                'green',
+                              fontWeight: 'bold'
+                            }}>
+                              {emprestimoAtivo.status_fluxo || 'Em dia'}
+                            </span>
+                          </Typography>
+                          <Button variant="outlined" color="primary" size="small" onClick={() => setEditando(true)}>
+                            Editar
                           </Button>
-                        )}
-                      </Box>
-                    )}
-                    {/* Bloco de seleção de data */}
-                    {mostrarDataPagamento && (
-                      <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <TextField
-                          label="Data do pagamento"
-                          type="date"
-                          size="small"
-                          value={dataPagamentoEscolhida}
-                          onChange={e => setDataPagamentoEscolhida(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <Button
-                          variant="contained"
-                          onClick={async () => {
-                            if (!dataPagamentoEscolhida) return;
-                            if (mostrarDataPagamento === 'quitado') {
-                              await atualizarFluxoEmprestimo({
-                                status_fluxo: 'Quitado',
-                                pagamento_total: true,
-                                pagamento_30: false,
-                                data_pagamento_real: dataPagamentoEscolhida,
-                                quantidade_pagamento_30: emprestimoAtivo.quantidade_pagamento_30 || 0,
-                                data_ultimo_pagamento_30: emprestimoAtivo.data_ultimo_pagamento_30 || null
-                              });
-                            } else if (mostrarDataPagamento === '30') {
-                              await marcarPagamento30(dataPagamentoEscolhida);
-                            }
-                            setMostrarDataPagamento('');
-                            setDataPagamentoEscolhida('');
-                          }}
-                        >
-                          Confirmar
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          onClick={() => {
-                            setMostrarDataPagamento('');
-                            setDataPagamentoEscolhida('');
-                          }}
-                        >
-                          Cancelar
-                        </Button>
-                      </Box>
-                    )}
-
-                    {/* Novo Empréstimo */}
-                    {emprestimoAtivo.status_fluxo === 'Quitado' && (
-                      <Card sx={{ mt: 3, p: 2, background: '#e8f5e9' }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'medium', mb: 2 }}>
-                          Novo Empréstimo
-                        </Typography>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              label="Valor do novo empréstimo"
-                              value={novoValor}
-                              onChange={e => setNovoValor(e.target.value)}
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{ shrink: true }}
-                              type="number"
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              label="Data do novo empréstimo"
-                              type="date"
-                              value={novaData}
-                              onChange={e => setNovaData(e.target.value)}
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{ shrink: true }}
-                            />
-                          </Grid>
-                        </Grid>
-                        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                        </Box>
+                        <Box display="flex" flexDirection="column" gap={1}>
+                          <Typography>
+                            <b>Data do Empréstimo:</b>{' '}
+                            {emprestimoAtivo.data_emprestimo
+                              ? new Date(emprestimoAtivo.data_emprestimo).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </Typography>
+                          <Typography>
+                            <b>Data do Próximo Pagamento:</b>{' '}
+                            {emprestimoAtivo.data_pagamento
+                              ? new Date(emprestimoAtivo.data_pagamento).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </Typography>
+                          <Typography>
+                            <b>Data do Pagamento Real:</b>{' '}
+                            {emprestimoAtivo.data_pagamento_real
+                              ? new Date(emprestimoAtivo.data_pagamento_real).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </Typography>
+                          <Typography>
+                            <b>Pagamento somente dos juros (30%):</b> {emprestimoAtivo.pagamento_30 ? 'Sim' : 'Não'}
+                            {emprestimoAtivo.quantidade_pagamento_30 > 0 && (
+                              <span style={{ marginLeft: 8 }}>
+                                <b>({emprestimoAtivo.quantidade_pagamento_30}x)</b>
+                              </span>
+                            )}
+                          </Typography>
+                          <Typography>
+                            <b>Data do Último Pagamento 30%:</b>{' '}
+                            {emprestimoAtivo.data_ultimo_pagamento_30
+                              ? new Date(emprestimoAtivo.data_ultimo_pagamento_30).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </Typography>
+                          <Typography>
+                            <b>Valor Emprestado:</b> R$ {emprestimoAtivo.valor_desejado ? Number(emprestimoAtivo.valor_desejado).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '-'}
+                          </Typography>
+                          <Typography>
+                            <b>Juros 30% pagos:</b> R$ {emprestimoAtivo.quantidade_pagamento_30 && emprestimoAtivo.valor_desejado
+                              ? (Number(emprestimoAtivo.valor_desejado) * 0.3 * Number(emprestimoAtivo.quantidade_pagamento_30)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+                              : '0,00'}
+                          </Typography>
+                          <Typography>
+                            <b>Dias em atraso:</b> {emprestimoAtivo.dias_atraso ?? 0}
+                          </Typography>
+                          <Typography>
+                            <b>Juros de atraso:</b> R$ {emprestimoAtivo.juros_atraso ? Number(emprestimoAtivo.juros_atraso).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}
+                          </Typography>
+                          <Typography sx={{ color: 'red', fontWeight: 'bold' }}>
+                            Valor Total Devido: R$ {emprestimoAtivo.status_fluxo === 'Quitado'
+                              ? '0,00'
+                              : (
+                                  emprestimoAtivo.valor_total_devido !== null && emprestimoAtivo.valor_total_devido !== undefined
+                                    ? Number(emprestimoAtivo.valor_total_devido).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+                                    : '0,00'
+                                )
+                          }
+                          </Typography>
+                          <Typography sx={{ color: 'green', fontWeight: 'bold' }}>
+                            Valor Quitado: R$ {emprestimoAtivo.valor_quitado
+                              ? Number(emprestimoAtivo.valor_quitado).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+                              : '0,00'}
+                          </Typography>
+                        </Box>
+                        {/* Botões de ação */}
+                        <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
                           <Button
                             variant="contained"
-                            color="primary"
-                            onClick={async () => {
-                              setMensagem('');
-                              if (!novoValor || !novaData) {
-                                setMensagem('Por favor, preencha o valor e a data do novo empréstimo.');
-                                return;
-                              }
-                              const valorNumerico = parseFloat(novoValor.replace(',', '.'));
-                              if (isNaN(valorNumerico)) {
-                                setMensagem('Valor inválido.');
-                                return;
-                              }
-                              const novaDataFormatada = new Date(novaData).toISOString().slice(0, 10);
-                              const dataProxPagamento = new Date(novaData);
-                              dataProxPagamento.setDate(dataProxPagamento.getDate() + 30);
-                              const data_pagamento = dataProxPagamento.toISOString().slice(0, 10);
+                            color="success"
+                            onClick={() => setMostrarDataPagamento('quitado')}
+                            disabled={!!mostrarDataPagamento}
+                          >
+                            Marcar como Quitado
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="warning"
+                            onClick={() => setMostrarDataPagamento('30')}
+                            disabled={!!mostrarDataPagamento}
+                          >
+                            Marcar Pagamento dos 30%
+                          </Button>
+                          {emprestimoAtivo.status_fluxo === 'Quitado' && (
+                            <Button
+                              variant="outlined"
+                              color="warning"
+                              onClick={desfazerQuitacao}
+                            >
+                              Desfazer Quitação
+                            </Button>
+                          )}
+                        </Box>
+                        {/* Bloco de seleção de data */}
+                        {mostrarDataPagamento && (
+                          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <TextField
+                              label="Data do pagamento"
+                              type="date"
+                              size="small"
+                              value={dataPagamentoEscolhida}
+                              onChange={e => setDataPagamentoEscolhida(e.target.value)}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                            <Button
+                              variant="contained"
+                              onClick={async () => {
+                                if (!dataPagamentoEscolhida) return;
+                                if (mostrarDataPagamento === 'quitado') {
+                                  await atualizarFluxoEmprestimo({
+                                    status_fluxo: 'Quitado',
+                                    pagamento_total: true,
+                                    pagamento_30: false,
+                                    data_pagamento_real: dataPagamentoEscolhida,
+                                    quantidade_pagamento_30: emprestimoAtivo.quantidade_pagamento_30 || 0,
+                                    data_ultimo_pagamento_30: emprestimoAtivo.data_ultimo_pagamento_30 || null
+                                  });
+                                } else if (mostrarDataPagamento === '30') {
+                                  await marcarPagamento30(dataPagamentoEscolhida);
+                                }
+                                setMostrarDataPagamento('');
+                                setDataPagamentoEscolhida('');
+                              }}
+                            >
+                              Confirmar
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              onClick={() => {
+                                setMostrarDataPagamento('');
+                                setDataPagamentoEscolhida('');
+                              }}
+                            >
+                              Cancelar
+                            </Button>
+                          </Box>
+                        )}
+
+                        {/* Novo Empréstimo */}
+                        {emprestimoAtivo.status_fluxo === 'Quitado' && (
+                          <Card sx={{ mt: 3, p: 2, background: '#e8f5e9' }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'medium', mb: 2 }}>
+                              Novo Empréstimo
+                            </Typography>
+                            <Grid container spacing={2}>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  label="Valor do novo empréstimo"
+                                  value={novoValor}
+                                  onChange={e => setNovoValor(e.target.value)}
+                                  size="small"
+                                  fullWidth
+                                  InputLabelProps={{ shrink: true }}
+                                  type="number"
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  label="Data do novo empréstimo"
+                                  type="date"
+                                  value={novaData}
+                                  onChange={e => setNovaData(e.target.value)}
+                                  size="small"
+                                  fullWidth
+                                  InputLabelProps={{ shrink: true }}
+                                />
+                              </Grid>
+                            </Grid>
+                            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={async () => {
+                                  setMensagem('');
+                                  if (!novoValor || !novaData) {
+                                    setMensagem('Por favor, preencha o valor e a data do novo empréstimo.');
+                                    return;
+                                  }
+                                  const valorNumerico = parseFloat(novoValor.replace(',', '.'));
+                                  if (isNaN(valorNumerico)) {
+                                    setMensagem('Valor inválido.');
+                                    return;
+                                  }
+                                  const novaDataFormatada = new Date(novaData).toISOString().slice(0, 10);
+                                  const dataProxPagamento = new Date(novaData);
+                                  dataProxPagamento.setDate(dataProxPagamento.getDate() + 30);
+                                  const data_pagamento = dataProxPagamento.toISOString().slice(0, 10);
 
                                 const resp = await fetch(`${API_URL}/api/emprestimos`, {
                                 method: 'POST',
@@ -1190,22 +1187,28 @@ const res = await fetch(`${API_URL}/api/emprestimos/estatisticas`);
                                 })
                               });
 
-                                if (resp.ok) {
-                                setMensagem('Novo empréstimo criado com sucesso!');
-                                setNovoValor('');
-                                setNovaData('');
-                                await buscarDetalhes(cadastro.cpf);
-                                await buscarTodos();
-                              } else {
-                                const erro = await resp.json();
-                                setMensagem('Erro ao criar novo empréstimo: ' + (erro.erro || 'Erro desconhecido'));
-                              }
-                            }}
-                          >
-                            Confirmar Novo Empréstimo
-                          </Button>
-                        </Box>
-                      </Card>
+                                  if (resp.ok) {
+                                    setMensagem('Novo empréstimo criado com sucesso!');
+                                    setNovoValor('');
+                                    setNovaData('');
+                                    await buscarDetalhes(cadastro.cpf);
+                                    await buscarTodos();
+                                  } else {
+                                    const erro = await resp.json();
+                                    setMensagem('Erro ao criar novo empréstimo: ' + (erro.erro || 'Erro desconhecido'));
+                                  }
+                                }}
+                              >
+                                Confirmar Novo Empréstimo
+                              </Button>
+                            </Box>
+                          </Card>
+                        )}
+                      </>
+                    ) : (
+                      <Typography sx={{ color: 'gray', fontStyle: 'italic' }}>
+                        Nenhum empréstimo encontrado para este cliente.
+                      </Typography>
                     )}
                   </CardContent>
                 </Card>
